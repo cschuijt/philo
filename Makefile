@@ -14,6 +14,7 @@
 NAME 			    := philo
 CC				    := cc
 COMPIL_FLAGS		?= -Wall -Wextra -Werror
+INCLUDE_FLAGS		?= -I include
 
 SOURCEFILES	:=	main.c
 
@@ -26,12 +27,12 @@ all : $(NAME)
 
 $(NAME) : $(OBJS)
 	@printf "$(COMP_HEADER)$(C_LGREEN)$@$(COMP_AFTER)"
-	@$(CC) $(OBJS) $(COMPIL_FLAGS) -o $@
+	@$(CC) $(OBJS) $(COMPIL_FLAGS) -o $@ $(INCLUDE_FLAGS)
 	@printf "$(COMP_DONE)"
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c | $(OBJ_DIR)
 	@printf "$(COMP_HEADER)$(notdir $<)$(COMP_AFTER)"
-	@$(CC) $(COMPIL_FLAGS) -o $@ -c $^
+	@$(CC) $(COMPIL_FLAGS) -o $@ -c $^ $(INCLUDE_FLAGS)
 	@printf "$(COMP_DONE)"
 
 $(OBJ_DIR) :

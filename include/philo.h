@@ -1,21 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.c                                             :+:    :+:            */
+/*   philo.h                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cschuijt <cschuijt@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/05/30 22:21:55 by cschuijt      #+#    #+#                 */
-/*   Updated: 2023/05/30 22:21:55 by cschuijt      ########   odam.nl         */
+/*   Created: 2023/05/30 22:27:53 by cschuijt      #+#    #+#                 */
+/*   Updated: 2023/05/30 22:27:53 by cschuijt      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
-
-int	main(int ac, char **av)
-{
-	(void) ac;
-	(void) av;
-	printf("hoi xd\n");
-	return (0);
-}
+#include <stdio.h>
