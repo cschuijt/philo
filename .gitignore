@@ -1,0 +1,14 @@
+.DS_Store
+*.o
+test
+*.out*
+.vscode/*
+minishell
+*.a
+*.exe
+*.dSYM
+shell-experiments/*
+valgrind-out.txt
+misc/*
+misc/deprecated_functions.c
+readline.supp
