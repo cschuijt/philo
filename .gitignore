@@ -3,11 +3,12 @@
 test
 *.out*
 .vscode/*
-minishell
+philo
 *.a
 *.exe
 *.dSYM
 shell-experiments/*
+obj/*
 valgrind-out.txt
 misc/*
 misc/deprecated_functions.c
