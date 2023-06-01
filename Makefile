@@ -14,7 +14,7 @@
 NAME 			    := philo
 CC				    := cc
 COMPIL_FLAGS		?= -Wall -Wextra -Werror
-INCLUDE_FLAGS		?= -I include
+INCLUDE_FLAGS		?= -I include -pthread
 
 SOURCEFILES	:=	main.c
 
