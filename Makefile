@@ -16,23 +16,28 @@ CC				    := cc
 COMPIL_FLAGS		?= -Wall -Wextra -Werror
 INCLUDE_FLAGS		?= -I include -pthread
 
-SOURCEFILES	:=	main.c
+SOURCEFILES	:=	main.c \
+				cleanup.c \
+				setup.c \
+				validations.c
+
+HEADER	:=	include/philo.h
 
 OFILES	:=	$(SOURCEFILES:.c=.o)
 SRC_DIR	:=	src
 OBJ_DIR	:=	obj
-OBJS	:=	$(addprefix $(OBJ_DIR), /$(OFILES))
+OBJS	:=	$(addprefix $(OBJ_DIR), $(addprefix /, $(OFILES)))
 
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-	@printf "$(COMP_HEADER)$(C_LGREEN)$@$(COMP_AFTER)"
+	@printf "$(COMP_BEFORE)$(C_LGREEN)$@$(COMP_AFTER)"
 	@$(CC) $(OBJS) $(COMPIL_FLAGS) -o $@ $(INCLUDE_FLAGS)
 	@printf "$(COMP_DONE)"
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c | $(OBJ_DIR)
-	@printf "$(COMP_HEADER)$(notdir $<)$(COMP_AFTER)"
-	@$(CC) $(COMPIL_FLAGS) -o $@ -c $^ $(INCLUDE_FLAGS)
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) | $(OBJ_DIR)
+	@printf "$(COMP_BEFORE)$(notdir $<)$(COMP_AFTER)"
+	@$(CC) $(COMPIL_FLAGS) -o $@ -c $< $(INCLUDE_FLAGS)
 	@printf "$(COMP_DONE)"
 
 $(OBJ_DIR) :
@@ -51,7 +56,7 @@ re : fclean all
 
 # Fancy shmancy
 
-COMP_HEADER = $(C_ORANGE)Compiling: $(C_CYAN)$(C_BOLD)
+COMP_BEFORE = $(C_ORANGE)Compiling: $(C_CYAN)$(C_BOLD)
 COMP_AFTER  = $(C_RESET)$(C_ORANGE)... $(C_RESET)
 COMP_DONE   = $(C_GREEN)(Done!)$(C_RESET)\n
 
