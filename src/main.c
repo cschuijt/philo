@@ -14,23 +14,24 @@
 
 int	main(int ac, char **av)
 {
-	t_interrupt		interrupt;
+	t_state			state;
 	t_philosopher	**philo_array;
-	pthread_mutex_t	**forks;
 
 	if (!run_input_validations(ac, av))
 		return (1);
-	if (pthread_mutex_init(&interrupt.mutex, NULL))
+	state = create_state_struct(av);
+	if (pthread_mutex_init(&state.mutex, NULL))
 		return (1);
-	interrupt.keep_going = true;
-	if (!setup_fork_array(&forks, av) && \
-		!setup_philosopher_array(&philo_array, av, &interrupt, forks))
+	if (setup_philosopher_array(&philo_array, av, &state))
 	{
-		// start_simulation(philo_array);
-		printf("ok lol\n");
+		if (distribute_forks(philo_array))
+		{
+			// start_simulation(philo_array);
+			free_philosopher_array(philo_array, false);
+		}
+		else
+			free_philosopher_array(philo_array, true);
 	}
-	free_fork_array(forks);
-	free_philosopher_array(philo_array);
-	pthread_mutex_destroy(&interrupt.mutex);
+	pthread_mutex_destroy(&state.mutex);
 	return (0);
 }

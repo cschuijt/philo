@@ -12,23 +12,7 @@
 
 #include "philo.h"
 
-void	free_fork_array(pthread_mutex_t **array)
-{
-	int	i;
-
-	if (!array)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		pthread_mutex_destroy(array[i]);
-		free(array[i]);
-		i++;
-	}
-	free(array);
-}
-
-void	free_philosopher_array(t_philosopher **array)
+void	free_philosopher_array(t_philosopher **array, bool skip_mutexes)
 {
 	int	i;
 
@@ -37,6 +21,8 @@ void	free_philosopher_array(t_philosopher **array)
 		return ;
 	while (array[i])
 	{
+		if (!skip_mutexes)
+			pthread_mutex_destroy(&(array[i]->fork_r));
 		free(array[i]);
 		i++;
 	}

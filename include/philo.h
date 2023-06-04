@@ -18,23 +18,26 @@
 # include <stdbool.h>
 # include <string.h>
 
-typedef struct s_interrupt {
-	pthread_mutex_t	mutex;
-	bool			keep_going;
-}	t_interrupt;
-
-typedef struct s_philosopher {
-	int				id;
-	pthread_t		thread;
-	pthread_mutex_t	*fork_l;
-	pthread_mutex_t	*fork_r;
+typedef struct s_state {
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	bool			has_max_eat_times;
 	int				should_eat_times;
+	pthread_mutex_t	mutex;
+	bool			keep_going;
+}	t_state;
+
+typedef struct s_philosopher {
+	int				id;
+	pthread_t		thread;
+	pthread_mutex_t	*fork_l;
+	pthread_mutex_t	fork_r;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
 	int				times_eaten;
-	t_interrupt		*interrupt;
+	t_state			*state;
 }	t_philosopher;
 
 //	Validations
@@ -43,9 +46,10 @@ bool	run_input_validations(int ac, char **av);
 
 // Setup
 
+t_state	create_state_struct(char **av);
 bool	setup_philosopher_array(t_philosopher ***philo_array, char **av, \
-							t_interrupt *interrupt, pthread_mutex_t **forks);
-bool	setup_fork_array(pthread_mutex_t ***array_ptr, char **av);
+														t_state *state);
+bool	distribute_forks(t_philosopher **philo_array);
 
 //	Utilities
 
@@ -54,7 +58,6 @@ void	*ft_calloc(size_t num, size_t size);
 
 // Cleanup
 
-void	free_fork_array(pthread_mutex_t **array);
-void	free_philosopher_array(t_philosopher **array);
+void	free_philosopher_array(t_philosopher **array, bool skip_mutexes);
 
 #endif

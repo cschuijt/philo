@@ -12,47 +12,51 @@
 
 #include "philo.h"
 
-static t_philosopher	*setup_philosopher_struct(char **av, int i, \
-													t_interrupt *interrupt, \
-													pthread_mutex_t **forks)
+t_state	create_state_struct(char **av)
+{
+	t_state	state;
+
+	memset(&state, 0, sizeof(t_state));
+	state.time_to_die = ft_atoi(av[2]);
+	state.time_to_eat = ft_atoi(av[3]);
+	state.time_to_sleep = ft_atoi(av[4]);
+	if (av[5])
+	{
+		state.has_max_eat_times = true;
+		state.should_eat_times = ft_atoi(av[5]);
+	}
+	state.keep_going = true;
+	return (state);
+}
+
+static t_philosopher	*setup_philosopher_struct(int i, t_state *state)
 {
 	t_philosopher	*philosopher;
 
 	philosopher = ft_calloc(1, sizeof(t_philosopher));
 	if (!philosopher)
 		return (NULL);
-	philosopher->id = i + 1;
-	philosopher->fork_l = forks[i];
-	philosopher->fork_r = forks[i + 1];
-	philosopher->time_to_die = ft_atoi(av[2]);
-	philosopher->time_to_eat = ft_atoi(av[3]);
-	philosopher->time_to_sleep = ft_atoi(av[4]);
-	if (av[5])
-	{
-		philosopher->has_max_eat_times = true;
-		philosopher->should_eat_times = ft_atoi(av[5]);
-	}
-	philosopher->interrupt = interrupt;
+	philosopher->id = i;
+	philosopher->state = state;
 	return (philosopher);
 }
 
 bool	setup_philosopher_array(t_philosopher ***philo_array, char **av, \
-							t_interrupt *interrupt, pthread_mutex_t **forks)
+														t_state *state)
 {
 	int				count;
 	int				i;
 	t_philosopher	**philosopher_array;
 
-	philosopher_array = *philo_array;
 	count = ft_atoi(av[1]);
 	philosopher_array = ft_calloc(count + 1, sizeof(t_philosopher *));
+	*philo_array = philosopher_array;
 	if (!philosopher_array)
 		return (false);
 	i = 0;
 	while (i < count)
 	{
-		philosopher_array[i] = setup_philosopher_struct(av, i + 1, \
-														interrupt, forks);
+		philosopher_array[i] = setup_philosopher_struct(i + 1, state);
 		if (!(philosopher_array[i]))
 			return (false);
 		i++;
@@ -60,21 +64,34 @@ bool	setup_philosopher_array(t_philosopher ***philo_array, char **av, \
 	return (true);
 }
 
-bool	setup_fork_array(pthread_mutex_t ***array, char **av)
+static void	clean_up_forks(t_philosopher **philo_array, int limit)
 {
-	int				count;
-	int				i;
+	int	i;
 
-	count = ft_atoi(av[1]);
-	*array = ft_calloc(count + 1, sizeof(pthread_mutex_t *));
-	if (!(*array))
-		return (false);
 	i = 0;
-	while (i < count)
+	while (philo_array[i] && i < limit)
 	{
-		if (pthread_mutex_init((*array)[i], NULL))
-			return (false);
+		pthread_mutex_destroy(&(philo_array[i]->fork_r));
 		i++;
 	}
+}
+
+bool	distribute_forks(t_philosopher **philo_array)
+{
+	int	i;
+
+	i = 0;
+	while (philo_array[i])
+	{
+		if (i > 0)
+			philo_array[i]->fork_l = &(philo_array[i - 1]->fork_r);
+		if (pthread_mutex_init(&(philo_array[i]->fork_r), NULL))
+		{
+			clean_up_forks(philo_array, i);
+			return (false);
+		}
+		i++;
+	}
+	philo_array[0]->fork_l = &(philo_array[i - 1]->fork_r);
 	return (true);
 }
