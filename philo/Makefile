@@ -13,13 +13,14 @@
 
 NAME 			    := philo
 CC				    := cc
-COMPIL_FLAGS		?= -Wall -Wextra -Werror
+COMPIL_FLAGS		?= -Wall -Wextra -Werror -g
 INCLUDE_FLAGS		?= -I include -pthread
 
 SOURCEFILES	:=	main.c \
 				cleanup.c \
 				setup.c \
-				validations.c
+				validations.c \
+				utilities.c
 
 HEADER	:=	include/philo.h
 
