@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <stdlib.h>
+#include <unistd.h>
 
 void	scuffed_sleep(int time)
 {
