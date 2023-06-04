@@ -55,6 +55,7 @@ bool	distribute_forks(t_philosopher **philo_array);
 
 int		ft_atoi(char *str);
 void	*ft_calloc(size_t num, size_t size);
+void	scuffed_sleep(int time);
 
 // Cleanup
 

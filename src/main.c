@@ -26,7 +26,7 @@ int	main(int ac, char **av)
 	{
 		if (distribute_forks(philo_array))
 		{
-			// start_simulation(philo_array);
+			// run_simulation(philo_array);
 			free_philosopher_array(philo_array, false);
 		}
 		else

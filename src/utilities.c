@@ -11,6 +11,24 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <stdlib.h>
+
+void	scuffed_sleep(int time)
+{
+	while (time > 0)
+	{
+		if (time > 100)
+		{
+			usleep(100000);
+			time -= 100;
+		}
+		else
+		{
+			usleep(time * 1000);
+			return ;
+		}
+	}
+}
 
 static int	ft_isspace(int c)
 {
