@@ -20,7 +20,8 @@ SOURCEFILES	:=	main.c \
 				cleanup.c \
 				setup.c \
 				validations.c \
-				utilities.c
+				utilities.c \
+				routine.c
 
 HEADER	:=	include/philo.h
 

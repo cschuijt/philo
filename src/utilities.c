@@ -13,6 +13,16 @@
 #include "philo.h"
 #include <unistd.h>
 
+void	print_with_time(int philo_id, char *message)
+{
+	struct timeval	time;
+	int				current_time;
+
+	gettimeofday(&time, NULL);
+	current_time = time.tv_usec / 1000;
+	printf("%d %d %s\n", current_time, philo_id, message);
+}
+
 void	scuffed_sleep(int time)
 {
 	while (time > 0)

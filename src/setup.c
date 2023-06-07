@@ -25,6 +25,8 @@ t_state	create_state_struct(char **av)
 		state.has_max_eat_times = true;
 		state.should_eat_times = ft_atoi(av[5]);
 	}
+	else
+		state.has_max_eat_times = false;
 	state.keep_going = true;
 	return (state);
 }

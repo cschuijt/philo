@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <stdbool.h>
 # include <string.h>
+# include <sys/time.h>
 
 typedef struct s_state {
 	int				time_to_die;
@@ -33,9 +34,6 @@ typedef struct s_philosopher {
 	pthread_t		thread;
 	pthread_mutex_t	*fork_l;
 	pthread_mutex_t	fork_r;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
 	int				times_eaten;
 	t_state			*state;
 }	t_philosopher;
@@ -51,11 +49,16 @@ bool	setup_philosopher_array(t_philosopher ***philo_array, char **av, \
 														t_state *state);
 bool	distribute_forks(t_philosopher **philo_array);
 
+// Routine
+
+void	*philosopher_routine(void *philo_struct);
+
 //	Utilities
 
 int		ft_atoi(char *str);
 void	*ft_calloc(size_t num, size_t size);
 void	scuffed_sleep(int time);
+void	print_with_time(int philo_id, char *message);
 
 // Cleanup
 

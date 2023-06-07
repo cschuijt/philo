@@ -12,6 +12,19 @@
 
 #include "philo.h"
 
+static void	run_simulation(t_philosopher **philo_array)
+{
+	int	i;
+
+	i = 0;
+	while (philo_array[i])
+	{
+		pthread_create(&(philo_array[i]->thread), NULL, \
+						philosopher_routine, philo_array[i]);
+		i++;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_state			state;
@@ -26,7 +39,8 @@ int	main(int ac, char **av)
 	{
 		if (distribute_forks(philo_array))
 		{
-			// run_simulation(philo_array);
+			run_simulation(philo_array);
+			pthread_join(philo_array[0]->thread, NULL);
 			free_philosopher_array(philo_array, false);
 		}
 		else
