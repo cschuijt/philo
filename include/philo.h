@@ -12,6 +12,9 @@
 
 #ifndef PHILO_H
 # define PHILO_H
+
+# define PHILO_SLEEP_INTERVAL 10
+
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -27,6 +30,7 @@ typedef struct s_state {
 	int				should_eat_times;
 	pthread_mutex_t	mutex;
 	bool			keep_going;
+	long			start_time;
 }	t_state;
 
 typedef struct s_philosopher {
@@ -35,33 +39,35 @@ typedef struct s_philosopher {
 	pthread_mutex_t	*fork_l;
 	pthread_mutex_t	fork_r;
 	int				times_eaten;
+	long			last_eaten;
 	t_state			*state;
 }	t_philosopher;
 
 //	Validations
 
-bool	run_input_validations(int ac, char **av);
+bool		run_input_validations(int ac, char **av);
 
 // Setup
 
-t_state	create_state_struct(char **av);
-bool	setup_philosopher_array(t_philosopher ***philo_array, char **av, \
+t_state		create_state_struct(char **av);
+bool		setup_philosopher_array(t_philosopher ***philo_array, char **av, \
 														t_state *state);
-bool	distribute_forks(t_philosopher **philo_array);
+bool		distribute_forks(t_philosopher **philo_array);
 
 // Routine
 
-void	*philosopher_routine(void *philo_struct);
+void		*philosopher_routine(void *philo_struct);
 
 //	Utilities
 
-int		ft_atoi(char *str);
-void	*ft_calloc(size_t num, size_t size);
-void	scuffed_sleep(int time);
-void	print_with_time(int philo_id, char *message);
+int			ft_atoi(char *str);
+void		*ft_calloc(size_t num, size_t size);
+void		scuffed_sleep(int time);
+void		print_with_time(t_philosopher *philo, char *message);
+long long	time_in_ms(void);
 
 // Cleanup
 
-void	free_philosopher_array(t_philosopher **array, bool skip_mutexes);
+void		free_philosopher_array(t_philosopher **array, bool skip_mutexes);
 
 #endif

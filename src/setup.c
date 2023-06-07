@@ -14,7 +14,8 @@
 
 t_state	create_state_struct(char **av)
 {
-	t_state	state;
+	t_state			state;
+	struct timeval	time;
 
 	memset(&state, 0, sizeof(t_state));
 	state.time_to_die = ft_atoi(av[2]);
@@ -28,6 +29,8 @@ t_state	create_state_struct(char **av)
 	else
 		state.has_max_eat_times = false;
 	state.keep_going = true;
+	gettimeofday(&time, NULL);
+	state.start_time = time_in_ms();
 	return (state);
 }
 
