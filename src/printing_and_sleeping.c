@@ -13,14 +13,17 @@
 #include "philo.h"
 #include <unistd.h>
 
+long long	time_in_us(void)
+{
+	struct timeval	timeval;
+
+	gettimeofday(&timeval, NULL);
+	return (timeval.tv_usec + (timeval.tv_sec * 1000000));
+}
+
 long long	time_in_ms(void)
 {
-	struct timeval	time;
-	long long		value;
-
-	gettimeofday(&time, NULL);
-	value = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-	return (value);
+	return (time_in_us() / 1000);
 }
 
 void	print_with_time(t_philosopher *philo, char *message)
@@ -29,25 +32,22 @@ void	print_with_time(t_philosopher *philo, char *message)
 				philo->id, message);
 }
 
-void	scuffed_sleep(int time)
+void	scuffed_sleep(int time_ms)
 {
 	long long	end_time;
 	long long	current_time;
 
-	end_time = time_in_ms() + time;
-	while (1)
+	current_time = time_in_us();
+	end_time = current_time + (time_ms * 1000);
+	while (current_time < end_time)
 	{
-		current_time = time_in_ms();
-		if (end_time - current_time <= 0)
-			return ;
-		else if (end_time - current_time > PHILO_SLEEP_INTERVAL)
-		{
-			usleep(PHILO_SLEEP_INTERVAL * 1000);
-		}
+		if (current_time + PHILO_SLEEP_INTERVAL < end_time)
+			usleep(PHILO_SLEEP_INTERVAL);
 		else
 		{
-			usleep((end_time - current_time) * 1000);
+			usleep(end_time - current_time);
 			return ;
 		}
+		current_time = time_in_us();
 	}
 }

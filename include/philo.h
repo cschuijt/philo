@@ -13,7 +13,7 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-# define PHILO_SLEEP_INTERVAL 10
+# define PHILO_SLEEP_INTERVAL 250
 
 # include <pthread.h>
 # include <stdio.h>
@@ -62,8 +62,9 @@ void		*philosopher_routine(void *philo_struct);
 
 int			ft_atoi(char *str);
 void		*ft_calloc(size_t num, size_t size);
-void		scuffed_sleep(int time);
+void		scuffed_sleep(int time_ms);
 void		print_with_time(t_philosopher *philo, char *message);
+long long	time_in_us(void);
 long long	time_in_ms(void);
 
 // Cleanup
