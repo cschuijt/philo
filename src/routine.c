@@ -13,7 +13,7 @@
 #include "philo.h"
 #include <sys/time.h>
 
-static void	run_left_handed_routine(t_philosopher *philo, bool limited)
+static void	run_left_handed_routine(t_philosopher *philo)
 {
 	while (philo->state->keep_going)
 	{
@@ -26,16 +26,16 @@ static void	run_left_handed_routine(t_philosopher *philo, bool limited)
 		scuffed_sleep(philo->state->time_to_eat);
 		pthread_mutex_unlock(philo->fork_l);
 		pthread_mutex_unlock(&(philo->fork_r));
+		pthread_mutex_lock(&philo->times_eaten_mutex);
 		philo->times_eaten++;
-		if (limited && philo->times_eaten >= philo->state->should_eat_times)
-			return ;
+		pthread_mutex_unlock(&philo->times_eaten_mutex);
 		print_with_time(philo, "is sleeping");
 		scuffed_sleep(philo->state->time_to_sleep);
 	}
 	return ;
 }
 
-static void	run_right_handed_routine(t_philosopher *philo, bool limited)
+static void	run_right_handed_routine(t_philosopher *philo)
 {
 	while (philo->state->keep_going)
 	{
@@ -48,9 +48,9 @@ static void	run_right_handed_routine(t_philosopher *philo, bool limited)
 		scuffed_sleep(philo->state->time_to_eat);
 		pthread_mutex_unlock(&(philo->fork_r));
 		pthread_mutex_unlock(philo->fork_l);
+		pthread_mutex_lock(&philo->times_eaten_mutex);
 		philo->times_eaten++;
-		if (limited && philo->times_eaten >= philo->state->should_eat_times)
-			return ;
+		pthread_mutex_unlock(&philo->times_eaten_mutex);
 		print_with_time(philo, "is sleeping");
 		scuffed_sleep(philo->state->time_to_sleep);
 	}
@@ -63,9 +63,9 @@ void	*philosopher_routine(void *philo_struct)
 
 	philo = (t_philosopher *) philo_struct;
 	if (philo->id == 1)
-		run_left_handed_routine(philo, philo->state->has_max_eat_times);
+		run_left_handed_routine(philo);
 	else
-		run_right_handed_routine(philo, philo->state->has_max_eat_times);
+		run_right_handed_routine(philo);
 	pthread_mutex_lock(&(philo->state->mutex));
 	philo->state->keep_going = false;
 	pthread_mutex_unlock(&(philo->state->mutex));

@@ -1,39 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   cleanup.c                                          :+:    :+:            */
+/*   reaper.c                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cschuijt <cschuijt@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/06/04 13:45:53 by cschuijt      #+#    #+#                 */
-/*   Updated: 2023/06/04 13:45:53 by cschuijt      ########   odam.nl         */
+/*   Created: 2023/06/13 19:49:40 by cschuijt      #+#    #+#                 */
+/*   Updated: 2023/06/13 19:49:40 by cschuijt      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	join_all_threads(t_philosopher **philo_array)
+void	*reaper_routine(void *philo_array)
 {
-	while (*philo_array)
-	{
-		pthread_join((*philo_array)->thread, NULL);
-		philo_array++;
-	}
-}
+	t_philosopher	**philos;
+	int				i;
 
-void	free_philosopher_array(t_philosopher **array, bool skip_mutexes)
-{
-	int	i;
-
-	i = 0;
-	if (!array)
-		return ;
-	while (array[i])
+	philos = (t_philosopher **) philo_array;
+	while ((philos[0])->state->keep_going)
 	{
-		if (!skip_mutexes)
-			pthread_mutex_destroy(&(array[i]->fork_r));
-		free(array[i]);
-		i++;
+		i = 0;
+		while (philos[i])
+		{
+		}
 	}
-	free(array);
+	kill_all_philosophers(philos);
 }

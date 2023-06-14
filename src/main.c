@@ -40,7 +40,7 @@ int	main(int ac, char **av)
 		if (distribute_forks(philo_array))
 		{
 			run_simulation(philo_array);
-			pthread_join(philo_array[0]->thread, NULL);
+			join_all_threads(philo_array);
 			free_philosopher_array(philo_array, false);
 		}
 		else

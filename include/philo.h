@@ -13,7 +13,7 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-# define PHILO_SLEEP_INTERVAL 250
+# define PHILO_SLEEP_INTERVAL 100
 
 # include <pthread.h>
 # include <stdio.h>
@@ -38,7 +38,9 @@ typedef struct s_philosopher {
 	pthread_t		thread;
 	pthread_mutex_t	*fork_l;
 	pthread_mutex_t	fork_r;
+	pthread_mutex_t	times_eaten_mutex;
 	int				times_eaten;
+	pthread_mutex_t	last_eaten_mutex;
 	long			last_eaten;
 	t_state			*state;
 }	t_philosopher;
@@ -57,6 +59,7 @@ bool		distribute_forks(t_philosopher **philo_array);
 // Routine
 
 void		*philosopher_routine(void *philo_struct);
+void		*reaper_routine(void *philo_array);
 
 //	Utilities
 
@@ -69,6 +72,7 @@ long long	time_in_ms(void);
 
 // Cleanup
 
+void		join_all_threads(t_philosopher **philo_array);
 void		free_philosopher_array(t_philosopher **array, bool skip_mutexes);
 
 #endif
