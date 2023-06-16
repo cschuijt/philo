@@ -28,12 +28,7 @@ long long	time_in_ms(void)
 
 void	print_with_time(t_philosopher *philo, char *message)
 {
-	bool	should_print;
-
-	pthread_mutex_lock(&(philo->state->mutex));
-	should_print = philo->state->keep_going;
-	pthread_mutex_unlock(&(philo->state->mutex));
-	if (should_print)
+	if (get_status(philo->state))
 	{
 		printf("%lld %d %s\n", time_in_ms() - philo->state->start_time, \
 					philo->id, message);

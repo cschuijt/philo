@@ -43,6 +43,7 @@ static t_philosopher	*setup_philosopher_struct(int i, t_state *state)
 		return (NULL);
 	philosopher->id = i;
 	philosopher->state = state;
+	philosopher->dies_at = time_in_us() + (state->time_to_die * 1000);
 	return (philosopher);
 }
 

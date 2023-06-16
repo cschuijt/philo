@@ -22,7 +22,8 @@ SOURCEFILES	:=	main.c \
 				validations.c \
 				utilities.c \
 				routine.c \
-				printing_and_sleeping.c
+				printing_and_sleeping.c \
+				monitoring.c
 
 HEADER	:=	include/philo.h
 
