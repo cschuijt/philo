@@ -13,7 +13,7 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-# define PHILO_SLEEP_INTERVAL 300
+# define PHILO_SLEEP_INTERVAL 200
 
 # include <pthread.h>
 # include <stdio.h>
@@ -28,7 +28,7 @@ typedef struct s_state {
 	int				time_to_sleep;
 	bool			has_max_eat_times;
 	int				should_eat_times;
-	pthread_mutex_t	mutex;
+	pthread_mutex_t	state_mutex;
 	bool			keep_going;
 	long long		start_time;
 }	t_state;

@@ -33,7 +33,7 @@ int	main(int ac, char **av)
 	if (!run_input_validations(ac, av))
 		return (1);
 	state = create_state_struct(av);
-	if (pthread_mutex_init(&state.mutex, NULL))
+	if (pthread_mutex_init(&state.state_mutex, NULL))
 		return (1);
 	if (setup_philosopher_array(&philo_array, av, &state))
 	{
@@ -47,6 +47,6 @@ int	main(int ac, char **av)
 		else
 			free_philosopher_array(philo_array, true);
 	}
-	pthread_mutex_destroy(&state.mutex);
+	pthread_mutex_destroy(&state.state_mutex);
 	return (0);
 }
