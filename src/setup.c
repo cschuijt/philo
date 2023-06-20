@@ -96,6 +96,11 @@ bool	distribute_forks(t_philosopher **philo_array)
 			clean_up_forks(philo_array, i);
 			return (false);
 		}
+		if (pthread_mutex_init(&(philo_array[i]->eat_stats_mutex), NULL))
+		{
+			clean_up_forks(philo_array, i);
+			return (false);
+		}
 		i++;
 	}
 	philo_array[0]->fork_l = &(philo_array[i - 1]->fork_r);

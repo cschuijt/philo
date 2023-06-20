@@ -35,7 +35,7 @@ static bool	get_philo_status(t_philosopher *philo, bool *philos_done_eating)
 
 	status = true;
 	pthread_mutex_lock(&(philo->eat_stats_mutex));
-	if (philo->state->has_max_eat_times && \
+	if (!(philo->state->has_max_eat_times) || \
 		philo->times_eaten < philo->state->should_eat_times)
 		*philos_done_eating = false;
 	if (time_in_us() >= philo->dies_at)
