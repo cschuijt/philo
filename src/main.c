@@ -12,15 +12,16 @@
 
 #include "philo.h"
 
-static void	run_simulation(t_philosopher **philo_array)
+static void	run_simulation(t_philosopher *philo_array, t_state *state)
 {
 	int	i;
 
 	i = 0;
-	while (philo_array[i])
+	state->start_time = time_in_us();
+	while (i < state->num_philosophers)
 	{
-		pthread_create(&(philo_array[i]->thread), NULL, \
-						philosopher_routine, philo_array[i]);
+		pthread_create(&(philo_array[i].thread), NULL, \
+						philosopher_routine, &(philo_array[i]));
 		i++;
 	}
 }
@@ -28,24 +29,24 @@ static void	run_simulation(t_philosopher **philo_array)
 int	main(int ac, char **av)
 {
 	t_state			state;
-	t_philosopher	**philo_array;
+	t_philosopher	*philo_array;
 
 	if (!run_input_validations(ac, av))
 		return (1);
 	state = create_state_struct(av);
 	if (pthread_mutex_init(&state.state_mutex, NULL))
 		return (1);
-	if (setup_philosopher_array(&philo_array, av, &state))
+	if (setup_philosopher_array(&philo_array, &state))
 	{
-		if (distribute_forks(philo_array))
+		if (distribute_forks(philo_array, &state))
 		{
-			run_simulation(philo_array);
-			monitor_philosophers(philo_array);
-			join_all_threads(philo_array);
-			free_philosopher_array(philo_array, false);
+			run_simulation(philo_array, &state);
+			monitor_philosophers(philo_array, &state);
+			join_all_threads(philo_array, &state);
+			free_philosopher_array(philo_array, &state, false);
 		}
 		else
-			free_philosopher_array(philo_array, true);
+			free_philosopher_array(philo_array, &state, true);
 	}
 	pthread_mutex_destroy(&state.state_mutex);
 	return (0);

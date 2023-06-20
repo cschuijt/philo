@@ -12,28 +12,34 @@
 
 #include "philo.h"
 
-void	join_all_threads(t_philosopher **philo_array)
+void	join_all_threads(t_philosopher *philo_array, t_state *state)
 {
-	while (*philo_array)
+	int	i;
+
+	i = 0;
+	while (i < state->num_philosophers)
 	{
-		pthread_join((*philo_array)->thread, NULL);
-		philo_array++;
+		pthread_join(philo_array[i].thread, NULL);
+		i++;
 	}
 }
 
-void	free_philosopher_array(t_philosopher **array, bool skip_mutexes)
+void	free_philosopher_array(t_philosopher *array, t_state *state, \
+								bool skip_mutexes)
 {
 	int	i;
 
 	i = 0;
 	if (!array)
 		return ;
-	while (array[i])
+	if (!skip_mutexes)
 	{
-		if (!skip_mutexes)
-			pthread_mutex_destroy(&(array[i]->fork_r));
-		free(array[i]);
-		i++;
+		while (i < state->num_philosophers)
+		{
+			pthread_mutex_destroy(&(array[i].fork_r));
+			pthread_mutex_destroy(&(array[i].eat_stats_mutex));
+			i++;
+		}
 	}
 	free(array);
 }

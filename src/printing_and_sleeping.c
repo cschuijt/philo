@@ -21,17 +21,17 @@ long long	time_in_us(void)
 	return (timeval.tv_usec + (timeval.tv_sec * 1000000));
 }
 
-long long	time_in_ms(void)
+long long	timestamp_in_ms(long long start_time)
 {
-	return (time_in_us() / 1000);
+	return ((time_in_us() - start_time) / 1000);
 }
 
-void	print_with_time(t_philosopher *philo, char *message)
+void	print_with_time(t_philosopher philo, char *message)
 {
-	if (get_status(philo->state))
+	if (get_status(philo.state))
 	{
-		printf("%lld %d %s\n", time_in_ms() - philo->state->start_time, \
-					philo->id, message);
+		printf("%lld %d %s\n", timestamp_in_ms(philo.state->start_time), \
+					philo.id, message);
 	}
 }
 

@@ -29,45 +29,48 @@ void	shut_down_simulation(t_state *state)
 	pthread_mutex_unlock(&(state->state_mutex));
 }
 
-static bool	get_philo_status(t_philosopher *philo, bool *philos_done_eating)
+static bool	get_philo_status(t_philosopher philo, t_state *state, \
+								bool *philos_done_eating)
 {
-	bool	status;
+	bool		status;
+	long long	current_time;
 
 	status = true;
-	pthread_mutex_lock(&(philo->eat_stats_mutex));
-	if (philo->state->has_max_eat_times && \
-		philo->times_eaten < philo->state->should_eat_times)
+	current_time = time_in_us();
+	pthread_mutex_lock(&(philo.eat_stats_mutex));
+	if (!(state->has_max_eat_times) || \
+			philo.times_eaten < state->should_eat_times)
 		*philos_done_eating = false;
-	if (time_in_us() >= philo->dies_at)
+	if (current_time >= philo.dies_at)
 	{
 		print_with_time(philo, "has died");
 		status = false;
 	}
-	pthread_mutex_unlock(&(philo->eat_stats_mutex));
+	pthread_mutex_unlock(&(philo.eat_stats_mutex));
 	return (status);
 }
 
-void	monitor_philosophers(t_philosopher **philo_array)
+void	monitor_philosophers(t_philosopher *philo_array, t_state *state)
 {
 	int		i;
 	bool	philos_done_eating;
 
-	while (get_status(philo_array[0]->state))
+	while (get_status(state))
 	{
 		philos_done_eating = true;
 		i = 0;
-		while (philo_array[i])
+		while (i < state->num_philosophers)
 		{
-			if (!get_philo_status(philo_array[i], &philos_done_eating))
+			if (!get_philo_status(philo_array[i], state, &philos_done_eating))
 			{
-				shut_down_simulation(philo_array[i]->state);
+				shut_down_simulation(state);
 				break ;
 			}
 			i++;
 		}
 		if (philos_done_eating)
 		{
-			shut_down_simulation(philo_array[0]->state);
+			shut_down_simulation(state);
 			break ;
 		}
 	}

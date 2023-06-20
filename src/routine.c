@@ -23,19 +23,21 @@ static void	update_philo_eat_stats(t_philosopher *philo)
 
 static void	run_left_handed_routine(t_philosopher *philo)
 {
+	update_philo_eat_stats(philo);
+	scuffed_sleep(1);
 	while (get_status(philo->state))
 	{
-		print_with_time(philo, "is thinking");
+		print_with_time(*philo, "is thinking");
 		pthread_mutex_lock(philo->fork_l);
-		print_with_time(philo, "has taken a fork");
+		print_with_time(*philo, "has taken a fork");
 		pthread_mutex_lock(&(philo->fork_r));
-		print_with_time(philo, "has taken a fork");
+		print_with_time(*philo, "has taken a fork");
 		update_philo_eat_stats(philo);
-		print_with_time(philo, "is eating");
+		print_with_time(*philo, "is eating");
 		scuffed_sleep(philo->state->time_to_eat);
 		pthread_mutex_unlock(philo->fork_l);
 		pthread_mutex_unlock(&(philo->fork_r));
-		print_with_time(philo, "is sleeping");
+		print_with_time(*philo, "is sleeping");
 		scuffed_sleep(philo->state->time_to_sleep);
 	}
 	return ;
@@ -43,19 +45,20 @@ static void	run_left_handed_routine(t_philosopher *philo)
 
 static void	run_right_handed_routine(t_philosopher *philo)
 {
+	update_philo_eat_stats(philo);
 	while (get_status(philo->state))
 	{
-		print_with_time(philo, "is thinking");
+		print_with_time(*philo, "is thinking");
 		pthread_mutex_lock(&(philo->fork_r));
-		print_with_time(philo, "has taken a fork");
+		print_with_time(*philo, "has taken a fork");
 		pthread_mutex_lock(philo->fork_l);
-		print_with_time(philo, "has taken a fork");
-		print_with_time(philo, "is eating");
+		print_with_time(*philo, "has taken a fork");
+		print_with_time(*philo, "is eating");
 		update_philo_eat_stats(philo);
 		scuffed_sleep(philo->state->time_to_eat);
 		pthread_mutex_unlock(&(philo->fork_r));
 		pthread_mutex_unlock(philo->fork_l);
-		print_with_time(philo, "is sleeping");
+		print_with_time(*philo, "is sleeping");
 		scuffed_sleep(philo->state->time_to_sleep);
 	}
 	return ;
