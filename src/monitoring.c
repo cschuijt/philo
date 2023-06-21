@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <philo.h>
+#include "philo.h"
 
 bool	get_status(t_state *state)
 {

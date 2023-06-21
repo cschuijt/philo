@@ -12,17 +12,27 @@
 
 #include "philo.h"
 
-static void	run_simulation(t_philosopher **philo_array)
+static void	run_simulation(t_philosopher **philo_array, t_state *state)
 {
 	int	i;
 
 	i = 0;
+	pthread_mutex_lock(&(state->state_mutex));
 	while (philo_array[i])
 	{
 		pthread_create(&(philo_array[i]->thread), NULL, \
 						philosopher_routine, philo_array[i]);
 		i++;
 	}
+	state->start_time = time_in_us();
+	i = 0;
+	while (philo_array[i])
+	{
+		philo_array[i]->dies_at = state->start_time + \
+									(state->time_to_die * 1000);
+		i++;
+	}
+	pthread_mutex_unlock(&(state->state_mutex));
 }
 
 int	main(int ac, char **av)
@@ -39,7 +49,7 @@ int	main(int ac, char **av)
 	{
 		if (distribute_forks(philo_array))
 		{
-			run_simulation(philo_array);
+			run_simulation(philo_array, &state);
 			monitor_philosophers(philo_array);
 			join_all_threads(philo_array);
 			free_philosopher_array(philo_array, false);

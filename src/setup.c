@@ -30,7 +30,7 @@ t_state	create_state_struct(char **av)
 		state.has_max_eat_times = false;
 	state.keep_going = true;
 	gettimeofday(&time, NULL);
-	state.start_time = time_in_ms();
+	state.start_time = time_in_us();
 	return (state);
 }
 

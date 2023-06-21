@@ -21,6 +21,7 @@
 # include <stdbool.h>
 # include <string.h>
 # include <sys/time.h>
+# include <unistd.h>
 
 typedef struct s_state {
 	int				time_to_die;
@@ -72,7 +73,7 @@ void		*ft_calloc(size_t num, size_t size);
 void		scuffed_sleep(int time_ms);
 void		print_with_time(t_philosopher *philo, char *message);
 long long	time_in_us(void);
-long long	time_in_ms(void);
+long long	time_in_ms(long long delay);
 
 // Cleanup
 

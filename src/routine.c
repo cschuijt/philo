@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <sys/time.h>
 
 static void	update_philo_eat_stats(t_philosopher *philo)
 {
@@ -23,6 +22,9 @@ static void	update_philo_eat_stats(t_philosopher *philo)
 
 static void	run_left_handed_routine(t_philosopher *philo)
 {
+	pthread_mutex_lock(&(philo->state->state_mutex));
+	pthread_mutex_unlock(&(philo->state->state_mutex));
+	scuffed_sleep(1);
 	while (get_status(philo->state))
 	{
 		print_with_time(philo, "is thinking");
