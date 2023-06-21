@@ -13,7 +13,7 @@
 
 NAME 			    := philo
 CC				    := cc
-COMPIL_FLAGS		?= -Wall -Wextra -Werror -g
+COMPIL_FLAGS		?= -Wall -Wextra -Werror -fsanitize=thread
 INCLUDE_FLAGS		?= -I include -pthread
 
 SOURCEFILES	:=	main.c \

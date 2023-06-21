@@ -28,29 +28,22 @@ long long	time_in_ms(void)
 
 void	print_with_time(t_philosopher *philo, char *message)
 {
-	if (get_status(philo->state))
+	pthread_mutex_lock(&(philo->state->state_mutex));
+	if (philo->state->keep_going)
 	{
 		printf("%lld %d %s\n", time_in_ms() - philo->state->start_time, \
 					philo->id, message);
 	}
+	pthread_mutex_unlock(&(philo->state->state_mutex));
 }
 
 void	scuffed_sleep(int time_ms)
 {
 	long long	end_time;
-	long long	current_time;
 
-	current_time = time_in_us();
-	end_time = current_time + (time_ms * 1000);
-	while (current_time < end_time)
+	end_time = time_in_us() + (time_ms * 1000);
+	while (time_in_us() + PHILO_SLEEP_INTERVAL < end_time)
 	{
-		if (current_time + PHILO_SLEEP_INTERVAL < end_time)
-			usleep(PHILO_SLEEP_INTERVAL);
-		else
-		{
-			usleep(end_time - current_time);
-			return ;
-		}
-		current_time = time_in_us();
+		usleep(PHILO_SLEEP_INTERVAL);
 	}
 }
