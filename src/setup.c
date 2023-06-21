@@ -18,6 +18,7 @@ t_state	create_state_struct(char **av)
 	struct timeval	time;
 
 	memset(&state, 0, sizeof(t_state));
+	state.num_philosophers = ft_atoi(av[1]);
 	state.time_to_die = ft_atoi(av[2]);
 	state.time_to_eat = ft_atoi(av[3]);
 	state.time_to_sleep = ft_atoi(av[4]);
@@ -47,14 +48,13 @@ static t_philosopher	*setup_philosopher_struct(int i, t_state *state)
 	return (philosopher);
 }
 
-bool	setup_philosopher_array(t_philosopher ***philo_array, char **av, \
-														t_state *state)
+bool	setup_philosopher_array(t_philosopher ***philo_array, t_state *state)
 {
 	int				count;
 	int				i;
 	t_philosopher	**philosopher_array;
 
-	count = ft_atoi(av[1]);
+	count = state->num_philosophers;
 	philosopher_array = ft_calloc(count + 1, sizeof(t_philosopher *));
 	*philo_array = philosopher_array;
 	if (!philosopher_array)

@@ -24,6 +24,7 @@
 # include <unistd.h>
 
 typedef struct s_state {
+	int				num_philosophers;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
@@ -52,8 +53,8 @@ bool		run_input_validations(int ac, char **av);
 // Setup
 
 t_state		create_state_struct(char **av);
-bool		setup_philosopher_array(t_philosopher ***philo_array, char **av, \
-														t_state *state);
+bool		setup_philosopher_array(t_philosopher ***philo_array, \
+									t_state *state);
 bool		distribute_forks(t_philosopher **philo_array);
 
 // Routine

@@ -35,6 +35,32 @@ static void	run_simulation(t_philosopher **philo_array, t_state *state)
 	pthread_mutex_unlock(&(state->state_mutex));
 }
 
+static void	run_single_philo_simulation(t_philosopher **philo_array, \
+										t_state *state)
+{
+	state->start_time = time_in_us();
+	print_with_time(philo_array[0], "is thinking");
+	pthread_mutex_lock(&(philo_array[0]->fork_r));
+	print_with_time(philo_array[0], "has grabbed a fork");
+	scuffed_sleep(state->time_to_die);
+	print_with_time(philo_array[0], "has died");
+	pthread_mutex_unlock(&(philo_array[0]->fork_r));
+}
+
+static bool	simulation_wrapper(t_philosopher **philo_array, t_state *state)
+{
+	if (state->num_philosophers == 1)
+	{
+		run_single_philo_simulation(philo_array, state);
+		return (false);
+	}
+	else
+	{
+		run_simulation(philo_array, state);
+		return (true);
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_state			state;
@@ -45,13 +71,15 @@ int	main(int ac, char **av)
 	state = create_state_struct(av);
 	if (pthread_mutex_init(&state.state_mutex, NULL))
 		return (1);
-	if (setup_philosopher_array(&philo_array, av, &state))
+	if (setup_philosopher_array(&philo_array, &state))
 	{
 		if (distribute_forks(philo_array))
 		{
-			run_simulation(philo_array, &state);
-			monitor_philosophers(philo_array);
-			join_all_threads(philo_array);
+			if (simulation_wrapper(philo_array, &state))
+			{
+				monitor_philosophers(philo_array);
+				join_all_threads(philo_array);
+			}
 			free_philosopher_array(philo_array, false);
 		}
 		else
