@@ -40,7 +40,10 @@ static bool	get_philo_status(t_philosopher *philo, bool *philos_done_eating)
 		*philos_done_eating = false;
 	if (time_in_us() >= philo->dies_at)
 	{
-		print_with_time(philo, "has died");
+		pthread_mutex_lock(&(philo->state->state_mutex));
+		print_without_locking(philo, "has died");
+		philo->state->keep_going = false;
+		pthread_mutex_unlock(&(philo->state->state_mutex));
 		status = false;
 	}
 	pthread_mutex_unlock(&(philo->eat_stats_mutex));
@@ -59,10 +62,7 @@ void	monitor_philosophers(t_philosopher **philo_array)
 		while (philo_array[i])
 		{
 			if (!get_philo_status(philo_array[i], &philos_done_eating))
-			{
-				shut_down_simulation(philo_array[i]->state);
 				break ;
-			}
 			i++;
 		}
 		if (philos_done_eating)

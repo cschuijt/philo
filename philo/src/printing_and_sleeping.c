@@ -25,13 +25,18 @@ long long	time_in_ms(long long delay)
 	return ((time_in_us() - delay) / 1000);
 }
 
+void	print_without_locking(t_philosopher *philo, char *message)
+{
+	printf("%lld %d %s\n", time_in_ms(philo->state->start_time), \
+					philo->id, message);
+}
+
 void	print_with_time(t_philosopher *philo, char *message)
 {
 	pthread_mutex_lock(&(philo->state->state_mutex));
 	if (philo->state->keep_going)
 	{
-		printf("%lld %d %s\n", time_in_ms(philo->state->start_time), \
-					philo->id, message);
+		print_without_locking(philo, message);
 	}
 	pthread_mutex_unlock(&(philo->state->state_mutex));
 }
