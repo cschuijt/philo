@@ -13,7 +13,7 @@
 
 NAME 			    := philo
 CC				    := cc
-COMPIL_FLAGS		?= -Wall -Wextra -Werror # -fsanitize=thread
+COMPILER_FLAGS		?= -Wall -Wextra -Werror # -fsanitize=thread
 INCLUDE_FLAGS		?= -I include -pthread
 
 SOURCEFILES	:=	main.c \
@@ -36,12 +36,12 @@ all : $(NAME)
 
 $(NAME) : $(OBJS)
 	@printf "$(COMP_BEFORE)$(C_LGREEN)$@$(COMP_AFTER)"
-	@$(CC) $(OBJS) $(COMPIL_FLAGS) -o $@ $(INCLUDE_FLAGS)
+	@$(CC) $(OBJS) $(COMPILER_FLAGS) -o $@ $(INCLUDE_FLAGS)
 	@printf "$(COMP_DONE)"
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c $(HEADER) | $(OBJ_DIR)
 	@printf "$(COMP_BEFORE)$(notdir $<)$(COMP_AFTER)"
-	@$(CC) $(COMPIL_FLAGS) -o $@ -c $< $(INCLUDE_FLAGS)
+	@$(CC) $(COMPILER_FLAGS) -o $@ -c $< $(INCLUDE_FLAGS)
 	@printf "$(COMP_DONE)"
 
 $(OBJ_DIR) :
