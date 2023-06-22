@@ -20,7 +20,7 @@ static void	update_philo_eat_stats(t_philosopher *philo)
 	pthread_mutex_unlock(&philo->eat_stats_mutex);
 }
 
-static void	run_left_handed_routine(t_philosopher *philo)
+static void	run_routine_with_delay(t_philosopher *philo)
 {
 	pthread_mutex_lock(&(philo->state->state_mutex));
 	pthread_mutex_unlock(&(philo->state->state_mutex));
@@ -43,8 +43,10 @@ static void	run_left_handed_routine(t_philosopher *philo)
 	return ;
 }
 
-static void	run_right_handed_routine(t_philosopher *philo)
+static void	run_routine(t_philosopher *philo)
 {
+	pthread_mutex_lock(&(philo->state->state_mutex));
+	pthread_mutex_unlock(&(philo->state->state_mutex));
 	while (get_status(philo->state))
 	{
 		print_with_time(philo, "is thinking");
@@ -69,9 +71,10 @@ void	*philosopher_routine(void *philo_struct)
 
 	philo = (t_philosopher *) philo_struct;
 	if (philo->id % 2)
-		run_right_handed_routine(philo);
+		run_routine(philo);
 	else
-		run_left_handed_routine(philo);
+		run_routine_with_delay(philo);
+	print_with_time(philo, "has died");
 	shut_down_simulation(philo->state);
 	return (NULL);
 }
