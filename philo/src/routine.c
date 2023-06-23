@@ -50,7 +50,6 @@ void	*philosopher_routine(void *philo_struct)
 	if (!(philo->id % 2))
 		scuffed_sleep(1);
 	run_routine(philo);
-	print_with_time(philo, "has died");
-	shut_down_simulation(philo->state);
+	kill_philosopher_and_end_simulation(philo);
 	return (NULL);
 }

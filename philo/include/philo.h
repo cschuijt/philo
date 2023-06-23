@@ -66,14 +66,15 @@ void		*philosopher_routine(void *philo_struct);
 bool		get_status(t_state *state);
 void		monitor_philosophers(t_philosopher **philo_array);
 void		shut_down_simulation(t_state *state);
+void		kill_philosopher_and_end_simulation(t_philosopher *philo);
 
 //	Utilities
 
 int			ft_atoi(char *str);
 void		*ft_calloc(size_t num, size_t size);
 void		scuffed_sleep(int time_ms);
-void		print_without_locking(t_philosopher *philo, char *message);
 void		print_with_time(t_philosopher *philo, char *message);
+void		print_without_locking(t_philosopher *philo, char *message);
 long long	time_in_us(void);
 long long	time_in_ms(long long delay);
 

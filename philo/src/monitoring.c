@@ -29,6 +29,15 @@ void	shut_down_simulation(t_state *state)
 	pthread_mutex_unlock(&(state->state_mutex));
 }
 
+void	kill_philosopher_and_end_simulation(t_philosopher *philo)
+{
+	pthread_mutex_lock(&(philo->state->state_mutex));
+	if (philo->state->keep_going)
+		print_without_locking(philo, "has died");
+	philo->state->keep_going = false;
+	pthread_mutex_unlock(&(philo->state->state_mutex));
+}
+
 static bool	get_philo_status(t_philosopher *philo, bool *philos_done_eating)
 {
 	bool	status;
@@ -40,10 +49,7 @@ static bool	get_philo_status(t_philosopher *philo, bool *philos_done_eating)
 		*philos_done_eating = false;
 	if (time_in_us() >= philo->dies_at)
 	{
-		pthread_mutex_lock(&(philo->state->state_mutex));
-		print_without_locking(philo, "has died");
-		philo->state->keep_going = false;
-		pthread_mutex_unlock(&(philo->state->state_mutex));
+		kill_philosopher_and_end_simulation(philo);
 		status = false;
 	}
 	pthread_mutex_unlock(&(philo->eat_stats_mutex));
