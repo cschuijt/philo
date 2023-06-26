@@ -46,6 +46,6 @@ void	scuffed_sleep(int time_ms)
 	long long	end_time;
 
 	end_time = time_in_us() + (time_ms * 1000);
-	while (time_in_us() + PHILO_SLEEP_INTERVAL < end_time)
+	while (time_in_us() < end_time)
 		usleep(PHILO_SLEEP_INTERVAL);
 }
