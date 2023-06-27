@@ -44,6 +44,7 @@ static t_philosopher	*setup_philosopher_struct(int i, t_state *state)
 		return (NULL);
 	philosopher->id = i;
 	philosopher->state = state;
+	philosopher->fork_r_available = true;
 	philosopher->dies_at = time_in_us() + (state->time_to_die * 1000);
 	return (philosopher);
 }
@@ -90,7 +91,10 @@ bool	distribute_forks(t_philosopher **philo_array)
 	while (philo_array[i])
 	{
 		if (i > 0)
+		{
 			philo_array[i]->fork_l = &(philo_array[i - 1]->fork_r);
+			philo_array[i]->fork_l_available = &(philo_array[i - 1]->fork_r_available);
+		}
 		if (pthread_mutex_init(&(philo_array[i]->fork_r), NULL))
 		{
 			clean_up_forks(philo_array, i);
@@ -104,5 +108,6 @@ bool	distribute_forks(t_philosopher **philo_array)
 		i++;
 	}
 	philo_array[0]->fork_l = &(philo_array[i - 1]->fork_r);
+	philo_array[0]->fork_l_available = &(philo_array[i - 1]->fork_r_available);
 	return (true);
 }

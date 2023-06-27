@@ -25,15 +25,15 @@ static void	run_routine(t_philosopher *philo)
 	while (get_status(philo->state))
 	{
 		print_with_time(philo, "is thinking");
-		pthread_mutex_lock(&(philo->fork_r));
+		grab_fork(&philo->fork_r, &philo->fork_r_available);
 		print_with_time(philo, "has taken a fork");
-		pthread_mutex_lock(philo->fork_l);
+		grab_fork(philo->fork_l, philo->fork_l_available);
 		print_with_time(philo, "has taken a fork");
 		print_with_time(philo, "is eating");
 		update_philo_eat_stats(philo);
 		scuffed_sleep(philo->state->time_to_eat);
-		pthread_mutex_unlock(&(philo->fork_r));
-		pthread_mutex_unlock(philo->fork_l);
+		release_fork(philo->fork_l, philo->fork_l_available);
+		release_fork(&philo->fork_r, &philo->fork_r_available);
 		print_with_time(philo, "is sleeping");
 		scuffed_sleep(philo->state->time_to_sleep);
 	}

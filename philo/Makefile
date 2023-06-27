@@ -23,7 +23,8 @@ SOURCEFILES	:=	main.c \
 				utilities.c \
 				routine.c \
 				printing_and_sleeping.c \
-				monitoring.c
+				monitoring.c \
+				forks.c
 
 HEADER	:=	include/philo.h
 

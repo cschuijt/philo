@@ -14,6 +14,7 @@
 # define PHILO_H
 
 # define PHILO_SLEEP_INTERVAL 200
+# define PHILO_FORK_CHECK_INTERVAL 200
 # define MONITORING_CHECK_INTERVAL 500
 
 # include <pthread.h>
@@ -40,7 +41,9 @@ typedef struct s_philosopher {
 	int				id;
 	pthread_t		thread;
 	pthread_mutex_t	*fork_l;
+	bool			*fork_l_available;
 	pthread_mutex_t	fork_r;
+	bool			fork_r_available;
 	pthread_mutex_t	eat_stats_mutex;
 	int				times_eaten;
 	long long		dies_at;
@@ -61,6 +64,8 @@ bool		distribute_forks(t_philosopher **philo_array);
 // Routine
 
 void		*philosopher_routine(void *philo_struct);
+void		grab_fork(pthread_mutex_t *mutex, bool *fork_available);
+void		release_fork(pthread_mutex_t *mutex, bool *fork_available);
 
 // Monitoring
 
@@ -73,9 +78,12 @@ void		kill_philosopher_and_end_simulation(t_philosopher *philo);
 
 int			ft_atoi(char *str);
 void		*ft_calloc(size_t num, size_t size);
+
 void		scuffed_sleep(int time_ms);
+
 void		print_with_time(t_philosopher *philo, char *message);
 void		print_without_locking(t_philosopher *philo, char *message);
+
 long long	time_in_us(void);
 long long	time_in_ms(long long delay);
 
