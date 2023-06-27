@@ -76,5 +76,6 @@ void	monitor_philosophers(t_philosopher **philo_array)
 			shut_down_simulation(philo_array[0]->state);
 			break ;
 		}
+		usleep(MONITORING_CHECK_INTERVAL);
 	}
 }

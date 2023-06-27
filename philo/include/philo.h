@@ -14,6 +14,7 @@
 # define PHILO_H
 
 # define PHILO_SLEEP_INTERVAL 200
+# define MONITORING_CHECK_INTERVAL 500
 
 # include <pthread.h>
 # include <stdio.h>
