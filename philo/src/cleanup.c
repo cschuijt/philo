@@ -31,7 +31,10 @@ void	free_philosopher_array(t_philosopher **array, bool skip_mutexes)
 	while (array[i])
 	{
 		if (!skip_mutexes)
+		{
 			pthread_mutex_destroy(&(array[i]->fork_r));
+			pthread_mutex_destroy(&(array[i]->eat_stats_mutex));
+		}
 		free(array[i]);
 		i++;
 	}

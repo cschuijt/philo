@@ -70,7 +70,7 @@ bool	setup_philosopher_array(t_philosopher ***philo_array, t_state *state)
 	return (true);
 }
 
-static void	clean_up_forks(t_philosopher **philo_array, int limit)
+static void	clean_up_forks(t_philosopher **philo_array, int limit, bool stats)
 {
 	int	i;
 
@@ -78,6 +78,8 @@ static void	clean_up_forks(t_philosopher **philo_array, int limit)
 	while (philo_array[i] && i < limit)
 	{
 		pthread_mutex_destroy(&(philo_array[i]->fork_r));
+		if (stats)
+			pthread_mutex_destroy(&(philo_array[i]->eat_stats_mutex));
 		i++;
 	}
 }
@@ -93,12 +95,12 @@ bool	distribute_forks(t_philosopher **philo_array)
 			philo_array[i]->fork_l = &(philo_array[i - 1]->fork_r);
 		if (pthread_mutex_init(&(philo_array[i]->fork_r), NULL))
 		{
-			clean_up_forks(philo_array, i);
+			clean_up_forks(philo_array, i, false);
 			return (false);
 		}
 		if (pthread_mutex_init(&(philo_array[i]->eat_stats_mutex), NULL))
 		{
-			clean_up_forks(philo_array, i);
+			clean_up_forks(philo_array, i, true);
 			return (false);
 		}
 		i++;
